@@ -9,6 +9,7 @@ export class LoginPage {
   submitButton: Locator;
 
   constructor(private page: Page) {
+    this.homePagePromoLocator = this.page.locator(".block-promo.home-main");
     this.emailInput = this.page.locator("#maincontent #email");
     this.passwordInput = this.page.locator("#maincontent #pass");
     this.submitButton = this.page.locator(".action.login");
