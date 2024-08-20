@@ -15,7 +15,7 @@ test.only('Adding item to the cart and check its correct price on Review and Pay
   const jacketPriceLocator = page.locator('#product-price-430');
   await jacketPriceLocator.waitFor({ state: 'visible' });
   const jacketPriceText = await jacketPriceLocator.textContent();
-  const jacketPriceNumber = parseFloat(jacketPriceText.replace(/[^0-9.]/g, ''));
+  // const jacketPriceNumber = parseFloat(jacketPriceText.replace(/[^0-9.]/g, ''));
 
   await page.locator('#option-label-size-143-item-168').first().click();
   await page.locator('#option-label-color-93-item-50').first().click();
@@ -68,33 +68,31 @@ test.only('Adding item to the cart and check its correct price on Review and Pay
   const radioButton = page.locator('input[name="ko_unique_1"].radio');
   await radioButton.check();
   await expect(radioButton).toBeChecked();
+
   //Extract shipping price for later comparison on the "Review and Payment" page
   const shippingPriceLocator = page.locator('span.price[data-bind="text: getFormattedPrice(method.price_excl_tax)"]').first();
   await shippingPriceLocator.waitFor({ state: 'visible' });
   const shippingPriceText = await shippingPriceLocator.textContent();
-  const shippingPriceNumber = parseFloat(shippingPriceText.replace(/[^0-9.]/g, ''));
+  // const shippingPriceNumber = parseFloat(shippingPriceText.replace(/[^0-9.]/g, ''));
 
   //Step 6. Verify that on the  'Review and Payments' you can see the correct 'Cart Subtotal' price
   await page.locator('button[type="submit"].button.action.continue.primary').click();
   //Taking the product price, shipping cost and the final price from the final box on the payment page 
   //for comparison
   const cartSubtotalLocator = page.locator(".amount[data-th='Cart Subtotal']");
-  // await cartSubtotalLocator.waitFor({ state: 'visible' });
-  // const cartSubtotalText = await cartSubtotalLocator.textContent();
+  await cartSubtotalLocator.waitFor({ state: 'visible' });
+  const cartSubtotalText = await cartSubtotalLocator.textContent();
   // const cartSubtotalNumber = parseFloat(cartSubtotalLocator.replace(/[^0-9.]/g, ''));
 
   const shippingLocator = page.locator(".price[data-th='Shipping']");
-  // await shippingLocator.waitFor({ state: 'visible' });
-  // const shippingText = await shippingLocator.textContent();
+  await shippingLocator.waitFor({ state: 'visible' });
+  const shippingText = await shippingLocator.textContent();
   // const shippingNumber = parseFloat(shippingText.replace(/[^0-9.]/g, ''));
-
-  const orderTotalLocator = page.locator(".price[data-th='Order Total']");
-  // await orderTotalLocator.waitFor({ state: 'attached', timeout: 60000 });
-  // const orderTotalText = await orderTotalLocator.textContent();
-  // const orderTotalNumber = parseFloat(orderTotalText.replace(/[^0-9.]/g, ''));
-
+  
   // jacketPriceNumber = cartSubtotalNumber
+  expect(cartSubtotalText).toBe(jacketPriceText);
   // shippingPriceNumber = shippingNumber
+  expect(shippingText).toBe(shippingPriceText);
   // jacketPriceNumber + shippingNumber = orderTotalNumber
 }, 120000);
 
